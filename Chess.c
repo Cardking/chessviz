@@ -14,7 +14,7 @@ typedef struct {
 void drbo (Cells cell[]);
 void startpoz (Cells cell[]);
 
-int main ()
+int main()
 {
     Cells cell[63];
 //  printf ("\n%i\n",sizeof (cell[1]) ); 
@@ -26,7 +26,7 @@ int main ()
     return 0;
 }
 
-void startpoz (Cells cell[]) {
+void startpoz(Cells cell[]) {
     int i = 0;
     for (i = 0; i < 64 ; ++i) {
         cell[i].name = NONE;
@@ -48,7 +48,7 @@ void startpoz (Cells cell[]) {
     cell[56].col = BL;
     cell[64].name = R;	
     cell[64].col = BL;
-    for (i = 7; i <= 7+(7*8); i+= 8) {
+    for (i = 7; i <= 7 + (7 * 8); i += 8) {
         cell[i].name = P;
         cell[i].col = BL;
     }
@@ -68,89 +68,88 @@ void startpoz (Cells cell[]) {
     cell[49].col = WH;
     cell[57].name = R;	
     cell[57].col = WH;
-    for (i = 2; i <= 2+(7*8); i+= 8) {
+    for (i = 2; i <= 2 + (7 * 8); i += 8) {
         cell[i].name = P;
-	cell[i].col = WH;
+        cell[i].col = WH;
     }
 }
 
-void drbo (Cells cell[]) {
+void drbo(Cells cell[]) {
 //  char simb = 0;
     int i = 0, j = 0;
-    printf ("\n\n    _______________________________");
+    printf("\n\n    _______________________________");
     for (i = 8; i >= 1; --i) {
-        printf ("\n   | ");
-	for (j = i; j < i+(8*7)+1;j+= 8) {
-	    switch (cell[j].col) {
-	    case WH: 
-	        printf ("%s",YELLOW); 
-		break;
-	    case BL: 
-	        printf ("%s",RED); 
-		break;
-	    default: 
-	        break;
-	    }
-	    if (cell[j].col == WH) {
-	        switch (cell[j].name) {
-		case R:
-		    printf ("%c",'R');
-		    break;
-		case N:
-		    printf ("%c",'N');
-		    break;
-		case B:
-		    printf ("%c",'B');
-		    break;
-		case Q:
-		    printf ("%c",'Q');
-		    break;
-		case K:
-		    printf ("%c",'K');
-		    break;
-		case P:
-		    printf ("%c",'P');
-		    break;
-		default:
-//	            printf (" ");
-		    break;
-		}
-	    } else {if (cell[j].col == BL) {
-		  switch (cell[j].name) {
-		  case R:
-		      printf ("%c",'r');
-		      break;
-		  case N:
-		      printf ("%c",'n');
-		      break;
-		  case B:
-		      printf ("%c",'b');
-		      break;
-		  case Q:
-		      printf ("%c",'q');
-		      break;
-		  case K:
-		      printf ("%c",'k');
-		      break;
-		  case P:
-		      printf ("%c",'p');
-		      break;
-		  default:
-//                    printf (" ");
-		      break;
-		  }
-	      } else { 
-		  printf (" ");
-	      }
-	    }
-	    if ( j != i+(8*7) ) {
-	        printf ("\033[0m");
-		printf (" | ");
-	    }
-		}
-		printf ("\033[0m |\n");
-		printf (" %d |___|___|___|___|___|___|___|___| ",i);
+        printf("\n   | ");
+        for (j = i; j < i + (8 * 7) + 1;j += 8) {
+            switch (cell[j].col) {
+            case WH: 
+                printf("%s",YELLOW); 
+                break;
+            case BL: 
+                printf("%s",RED); 
+                break;
+            default: 
+                break;
+            }
+            if (cell[j].col == WH) {
+                switch (cell[j].name) {
+                case R:
+                    printf("%c",'R');
+                    break;
+                case N:
+                    printf("%c",'N');
+                    break;
+                case B:
+                    printf("%c",'B');
+                    break;
+                case Q:
+                    printf("%c",'Q');
+                    break;
+                case K:
+                    printf("%c",'K');
+                    break;
+                case P:
+                    printf("%c",'P');
+                    break;
+                default:
+                    break;
+                }
+            } else {
+                if (cell[j].col == BL) {
+                    switch (cell[j].name) {
+                    case R:
+                        printf("%c",'r');
+                        break;
+                    case N:
+                        printf("%c",'n');
+                        break;
+                    case B:
+                        printf("%c",'b');
+                        break;
+                    case Q:
+                        printf("%c",'q');
+                        break;
+                    case K:
+                        printf("%c",'k');
+                        break;
+                    case P:
+                        printf("%c",'p');
+                        break;
+                    default:
+                        break;
+                    }
+                } else { 
+                    printf(" ");
+                }
+            }
+            if (j != i + (8 * 7)) {
+                printf("\033[0m");
+                printf(" | ");
+            }
+        }
+        printf("\033[0m |\n");
+        printf(" %d |___|___|___|___|___|___|___|___| ",i);
     }
     printf ("\n     A   B   C   D   E   F   G   H\n");
 }
-	
+
