@@ -150,6 +150,6 @@ void drbo(Cells cell[]) {
         printf("\033[0m |\n");
         printf(" %d |___|___|___|___|___|___|___|___| ",i);
     }
-    printf ("\n     A   B   C   D   E   F   G   H\n");
+    printf("\n     A   B   C   D   E   F   G   H\n");
 }
 
