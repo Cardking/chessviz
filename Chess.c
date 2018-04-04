@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 #define RED     "\033[1;31m"
 #define YELLOW  "\033[1;33m"
@@ -14,17 +15,27 @@ typedef struct {
 
 void drbo (Cells cell[]);
 void startpoz (Cells cell[]);
+binar decode(char* buf,unsigned int move_num, char* pos1, char* pos2);
+binar move(char* pos1, char* pos2);
 
 int main()
 {
     Cells cell[63];
+	char pos1[4] = {0}, pos2[4] = {0};
+	char buf[12] = {0};
+	unsigned int move_num = 0;
 //  printf ("\n%i\n",sizeof (cell[1]) ); 
 //  return 0;
     startpoz (cell);
-    drbo (cell);
-    scanf("a");
-    printf ("\n");
-    return 0;
+	while (1){
+    	drbo (cell);
+    	scanf("%s",buf);
+		decode(buf,move_num,pos1,pos2);
+//		move(pos1,pos2);
+    	printf("\n%s %s\n",pos1,pos2);
+		system("clear");
+	}
+	    return 0;
 }
 
 void startpoz(Cells cell[]) {
@@ -154,7 +165,16 @@ void drbo(Cells cell[]) {
     printf("\n     A   B   C   D   E   F   G   H\n");
 }
 
-binar decode(char* pos1, char* pos2){
-	
+binar decode(char* buf,unsigned int move_num, char* pos1, char* pos2){
+	char i = 0;
+	move_num = 1;
+	for (i = 0; i<2; i++){
+		pos1[i] = buf[i];
+	}
+	i++;
+	for (;i<5 ; ++i){
+		pos2[i-3] = buf[i];
+	}
+	return 1;
 }
 binar move(char* pos1, char* pos2);
