@@ -7,6 +7,7 @@
 enum {R,N,B,K,Q,P};
 enum {WH, BL};
 
+typedef char binar;
 typedef struct { 
     char name: 4, col: 2;
 } Cells;
@@ -153,3 +154,7 @@ void drbo(Cells cell[]) {
     printf("\n     A   B   C   D   E   F   G   H\n");
 }
 
+binar decode(char* pos1, char* pos2){
+	
+}
+binar move(char* pos1, char* pos2);
