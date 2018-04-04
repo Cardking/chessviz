@@ -16,23 +16,28 @@ typedef struct {
 void drbo (Cells cell[]);
 void startpoz (Cells cell[]);
 binar decode(char* buf,unsigned int move_num, char* pos1, char* pos2);
-binar move(char* pos1, char* pos2);
+binar move(Cells* cell,char* pos1, char* pos2);
 
 int main()
 {
-    Cells cell[63];
+    Cells cell[65];
 	char pos1[4] = {0}, pos2[4] = {0};
 	char buf[12] = {0};
 	unsigned int move_num = 0;
+	int i = 0;
 //  printf ("\n%i\n",sizeof (cell[1]) ); 
 //  return 0;
     startpoz (cell);
 	while (1){
     	drbo (cell);
     	scanf("%s",buf);
+		while (!(buf[i] <= 'h' && buf[i] >= 'a')){
+			printf("%c",buf[i]);
+			++i;	
+		}
 		decode(buf,move_num,pos1,pos2);
-//		move(pos1,pos2);
-    	printf("\n%s %s\n",pos1,pos2);
+		move(cell,pos1,pos2);
+    	printf("\t%c%c=%hhd %c%c=%hhd\n",pos1[0],pos1[1],pos1[2],pos2[0],pos2[1],pos2[2]);
 		system("clear");
 	}
 	    return 0;
@@ -166,15 +171,23 @@ void drbo(Cells cell[]) {
 }
 
 binar decode(char* buf,unsigned int move_num, char* pos1, char* pos2){
-	char i = 0;
+	unsigned int i = 0;
 	move_num = 1;
-	for (i = 0; i<2; i++){
+	for (; i<2; i++){
 		pos1[i] = buf[i];
 	}
 	i++;
 	for (;i<5 ; ++i){
 		pos2[i-3] = buf[i];
 	}
-	return 1;
+	pos1[2] = (pos1[0] - 'a')*8 + (pos1[1] - '0');
+	pos2[2] = (pos2[0] - 'a')*8 + (pos2[1] - '0');
+	return 0;
 }
-binar move(char* pos1, char* pos2);
+binar move(Cells* cell,char* pos1, char* pos2){
+	cell[pos2[2]].name = cell[pos1[2]].name;
+	cell[pos2[2]].col = cell[pos1[2]].col;
+	cell[pos1[2]].name = NONE;
+	cell[pos1[2]].col = 3;
+	return 0;
+}
