@@ -17,6 +17,7 @@ void drbo (Cells cell[]);
 void startpoz (Cells cell[]);
 binar decode(char* buf,unsigned int move_num, char* pos1, char* pos2);
 binar move(Cells* cell,char* pos1, char* pos2);
+binar pos_check(Cells* cell, const char* pos1, const char* pos2);
 
 int main()
 {
@@ -185,9 +186,20 @@ binar decode(char* buf,unsigned int move_num, char* pos1, char* pos2){
 	return 0;
 }
 binar move(Cells* cell,char* pos1, char* pos2){
-	cell[pos2[2]].name = cell[pos1[2]].name;
-	cell[pos2[2]].col = cell[pos1[2]].col;
-	cell[pos1[2]].name = NONE;
-	cell[pos1[2]].col = 3;
+	if ( pos_check(cell,pos1,pos2)){
+		return -1;
+	}
+	cell[(int)pos2[2]].name = cell[(int)pos1[2]].name;
+	cell[(int)pos2[2]].col = cell[(int)pos1[2]].col;
+	cell[(int)pos1[2]].name = NONE;
+	cell[(int)pos1[2]].col = 3;
 	return 0;
 }
+binar pos_check(Cells* cell, const char* pos1, const char* pos2){
+	if (cell[(int)pos1[2]].name != NONE && 
+	(cell[(int)pos2[2]].col != cell[(int)pos1[2]].col ||
+	cell[(int)pos1[2]].col == 3)){
+		return 0;
+	}
+	return 1;
+} 
