@@ -4,13 +4,14 @@
 #define RED     "\033[1;31m"
 #define YELLOW  "\033[1;33m"
 #define WHITE   "\033[1;37m"
-#define NONE 10
+#define NONE 6
 enum {R,N,B,K,Q,P};
 enum {WH, BL};
 
 typedef char binar;
 typedef struct { 
-    char name: 4, col: 2;
+    char name: 4, col: 3;
+	char moves;
 } Cells;
 
 void drbo (Cells cell[]);
@@ -29,6 +30,7 @@ int main()
 //  printf ("\n%i\n",sizeof (cell[1]) ); 
 //  return 0;
     startpoz (cell);
+//	int i = 0;
 	while (1){
     	drbo (cell);
     	scanf("%s",buf);
@@ -195,7 +197,10 @@ binar move(Cells* cell,char* pos1, char* pos2){
 	cell[(int)pos1[2]].col = 3;
 	return 0;
 }
+
 binar pos_check(Cells* cell, const char* pos1, const char* pos2){
+//	printf ("\npos1 == ( %hu, %hu ) , pos2 == ( %hu, %hu )\n",cell[(int)pos1[2]].name,
+//	pos1[2], cell[(int)pos2[2]].name, pos2[2]);
 	if (cell[(int)pos1[2]].name != NONE && 
 	(cell[(int)pos2[2]].col != cell[(int)pos1[2]].col ||
 	cell[(int)pos1[2]].col == 3)){
