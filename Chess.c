@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#define RED "" // "\033[1;31m"
-#define YELLOW "" //"\033[1;33m"
-#define WHITE  "" //"\033[1;37m"
+#define RED "\033[1;31m"
+#define YELLOW "\033[1;33m"
+#define WHITE  "\033[1;37m"
 #define NONE 6
 enum {R,N,B,K,Q,P};
 enum {WH, BL};
@@ -11,7 +11,7 @@ enum {WH, BL};
 typedef char binar;
 typedef struct { 
     char name: 4, col: 3;
-	char moves;
+	int moves;
 } Cells;
 
 void drbo (Cells cell[]);
@@ -19,6 +19,7 @@ void startpoz (Cells cell[]);
 binar decode(char* buf,unsigned int move_num, char* pos1, char* pos2);
 binar move(Cells* cell,char* pos1, char* pos2);
 binar pos_check(Cells* cell, const char* pos1, const char* pos2);
+binar p_check(Cells* cell,char pos1[],char pos2[]);
 
 int main()
 {
@@ -48,9 +49,10 @@ int main()
 
 void startpoz(Cells cell[]) {
     int i = 0;
-    for (i = 0; i < 64 ; ++i) {
+    for (i = 0; i <= 64 ; ++i) {
         cell[i].name = NONE;
         cell[i].col = 3;
+	cell[i].moves = 0;
     }
     cell[8].name = R;	
     cell[8].col = BL;
@@ -185,16 +187,37 @@ binar decode(char* buf,unsigned int move_num, char* pos1, char* pos2){
 	}
 	pos1[2] = (pos1[0] - 'a')*8 + (pos1[1] - '0');
 	pos2[2] = (pos2[0] - 'a')*8 + (pos2[1] - '0');
+	if ((pos2[2] > 64) || (pos2[2] < 1)){
+		pos2[2] = 0;
+	}
+	if ((pos1[2] > 64) || (pos1[2] < 1)){
+		pos1[2] = 0;
+	}
+	if (pos1[2] == pos2[2]){
+		pos1[2] = 66;
+	}
 	return 0;
 }
 binar move(Cells* cell,char* pos1, char* pos2){
+	if (pos1[2] == 66){
+		printf ("\nErr: %c%c = %c%c",pos1[0],pos1[1],pos2[0],pos2[1]);
+	}
+	if ((pos1[2] == 0) || (pos2[2] == 0)){
+		printf ("\nHaven't this cell");
+		return -1;
+	}
 	if ( pos_check(cell,pos1,pos2)){
+		return -1;
+	}
+	if (p_check(cell,pos1,pos2) == -1){
 		return -1;
 	}
 	cell[(int)pos2[2]].name = cell[(int)pos1[2]].name;
 	cell[(int)pos2[2]].col = cell[(int)pos1[2]].col;
+	cell[(int)pos2[2]].moves += 1;
 	cell[(int)pos1[2]].name = NONE;
 	cell[(int)pos1[2]].col = 3;
+	cell[(int)pos1[2]].moves = 0;
 	return 0;
 }
 
@@ -208,3 +231,47 @@ binar pos_check(Cells* cell, const char* pos1, const char* pos2){
 	}
 	return 1;
 } 
+
+binar p_check(Cells* cell,char pos1[],char pos2[]){
+	if (cell[(int)pos1[2]].name != P){
+		return 2;
+	}
+	int x[3] = {0},y[3] = {0};
+	int flag = 0;
+	x[1] = (pos1[2] - 1)/8;
+	y[1] = (pos1[2] - x[1]*8);
+	x[2] = (pos2[2] - 1)/8;
+	y[2] = (pos2[2] - x[2]*8);
+	if (cell[(int)pos1[2]].moves == 0){
+		flag = 1;
+	}
+	if (cell[(int)pos1[2]].col == WH){
+		if ((x[1] == x[2]) && (y[2]-y[1] <= flag + 1) && 
+		(y[2]-y[1] > 0) && cell[(int)pos2[2]].name == NONE){
+			if ((flag == 1) && (y[2]-y[1] == 2)){
+				return cell[(int)pos2[2]-1].name == NONE ? 0:-1;
+			}
+			return 0;
+		}
+		if ((y[2]-y[1] == 1) && ((x[1]-x[2] == 1) || (x[1]-x[2] == -1)) &&
+		cell[(int)pos2[2]].col == BL){
+			return 0;
+		}
+		return -1;
+	}
+	if (cell[(int)pos1[2]].col == BL){
+		if ((x[1] == x[2]) && (y[1]-y[2] <= flag + 1) && 
+		(y[1]-y[2] > 0) && cell[(int)pos2[2]].name == NONE){
+			if ((flag == 1) && (y[1]-y[2] == 2)){
+				return cell[(int)pos2[2]+1].name == NONE ? 0:-1;
+			}
+			return 0;
+		}
+		if ((y[1]-y[2] == 1) && ((x[1]-x[2] == 1) || (x[1]-x[2] == -1)) &&
+		cell[(int)pos2[2]].col == WH){
+			return 0;
+		}
+		return -1;
+	}
+	return -1;
+}
