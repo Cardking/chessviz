@@ -1,30 +1,49 @@
 #include <stdio.h>
+#include <string.h>
 
-#define RED     "\033[1;31m"
-#define YELLOW  "\033[1;33m"
-#define WHITE   "\033[1;37m"
-#define NONE 10
+#define RED "" // "\033[1;31m"
+#define YELLOW "" //"\033[1;33m"
+#define WHITE  "" //"\033[1;37m"
+#define NONE 6
 enum {R,N,B,K,Q,P};
 enum {WH, BL};
 
 typedef char binar;
 typedef struct { 
-    char name: 4, col: 2;
+    char name: 4, col: 3;
+	char moves;
 } Cells;
 
 void drbo (Cells cell[]);
 void startpoz (Cells cell[]);
+binar decode(char* buf,unsigned int move_num, char* pos1, char* pos2);
+binar move(Cells* cell,char* pos1, char* pos2);
+binar pos_check(Cells* cell, const char* pos1, const char* pos2);
 
 int main()
 {
-    Cells cell[63];
+    Cells cell[65];
+	char pos1[4] = {0}, pos2[4] = {0};
+	char buf[12] = {0};
+	unsigned int move_num = 0;
+	int i = 0;
 //  printf ("\n%i\n",sizeof (cell[1]) ); 
 //  return 0;
     startpoz (cell);
-    drbo (cell);
-    scanf("a");
-    printf ("\n");
-    return 0;
+//	int i = 0;
+	while (1){
+    	drbo (cell);
+    	scanf("%s",buf);
+		while (!(buf[i] <= 'h' && buf[i] >= 'a')){
+			printf("%c",buf[i]);
+			++i;	
+		}
+		decode(buf,move_num,pos1,pos2);
+		move(cell,pos1,pos2);
+    	printf("\t%c%c=%hhd %c%c=%hhd\n",pos1[0],pos1[1],pos1[2],pos2[0],pos2[1],pos2[2]);
+		system("clear");
+	}
+	    return 0;
 }
 
 void startpoz(Cells cell[]) {
@@ -154,7 +173,38 @@ void drbo(Cells cell[]) {
     printf("\n     A   B   C   D   E   F   G   H\n");
 }
 
-binar decode(char* pos1, char* pos2){
-	
+binar decode(char* buf,unsigned int move_num, char* pos1, char* pos2){
+	unsigned int i = 0;
+	move_num = 1;
+	for (; i<2; i++){
+		pos1[i] = buf[i];
+	}
+	i++;
+	for (;i<5 ; ++i){
+		pos2[i-3] = buf[i];
+	}
+	pos1[2] = (pos1[0] - 'a')*8 + (pos1[1] - '0');
+	pos2[2] = (pos2[0] - 'a')*8 + (pos2[1] - '0');
+	return 0;
 }
-binar move(char* pos1, char* pos2);
+binar move(Cells* cell,char* pos1, char* pos2){
+	if ( pos_check(cell,pos1,pos2)){
+		return -1;
+	}
+	cell[(int)pos2[2]].name = cell[(int)pos1[2]].name;
+	cell[(int)pos2[2]].col = cell[(int)pos1[2]].col;
+	cell[(int)pos1[2]].name = NONE;
+	cell[(int)pos1[2]].col = 3;
+	return 0;
+}
+
+binar pos_check(Cells* cell, const char* pos1, const char* pos2){
+//	printf ("\npos1 == ( %hu, %hu ) , pos2 == ( %hu, %hu )\n",cell[(int)pos1[2]].name,
+//	pos1[2], cell[(int)pos2[2]].name, pos2[2]);
+	if (cell[(int)pos1[2]].name != NONE && 
+	(cell[(int)pos2[2]].col != cell[(int)pos1[2]].col ||
+	cell[(int)pos1[2]].col == 3)){
+		return 0;
+	}
+	return 1;
+} 
