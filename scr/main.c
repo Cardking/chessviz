@@ -22,7 +22,9 @@ int main()
             ++i;	
             }
         decode(buf,move_num,pos1,pos2);
-        move(cell,pos1,pos2);
+	if (move_check(cell,pos1,pos2) == 0){
+        	move(cell,pos1,pos2);
+	}
         printf("\t%c%c=%hhd %c%c=%hhd\n",pos1[0],pos1[1],pos1[2],pos2[0],pos2[1],pos2[2]);
         system("clear");
     }

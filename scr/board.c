@@ -231,3 +231,166 @@ binar p_check(Cells* cell,char pos1[],char pos2[]){
     }
     return -1;
 }
+
+binar line_check(Cells* cell,char pos1[],char pos2[]){
+    int x[3] = {0},y[3] = {0};
+    int i = 0;
+    x[1] = (pos1[2] - 1)/8;
+    y[1] = (pos1[2] - x[1]*8);
+    x[2] = (pos2[2] - 1)/8;
+    y[2] = (pos2[2] - x[2]*8);
+	if ((y[1] == y[2]) && (x[1]>x[2])){
+		for(i = x[1] - 1; i>x[2];--i){
+			if(cell[(i*8)+y[1]].name != NONE)
+				return -1;
+		}
+		return 0;
+	}
+	if ((y[1] == y[2]) && (x[1]<x[2])){
+		for(i = x[1] + 1; i<x[2];++i){
+			if(cell[(i*8)+y[1]].name != NONE)
+				return -1;
+		}
+		return 0;
+	}
+	if ((x[1] == x[2]) && (y[1]>y[2])){
+		for(i = y[1] - 1; i>y[2];--i){
+			if(cell[(x[1]*8)+i].name != NONE)
+				return -1;
+		}
+		return 0;
+	}
+	if ((x[1] == x[2]) && (y[1]<y[2])){
+		for(i = y[1] + 1; i<y[2];++i){
+			if(cell[(x[1]*8)+i].name != NONE)
+				return -1;
+		}
+		return 0;
+	}
+	return -1;
+}
+
+binar diag_check(Cells* cell,char pos1[],char pos2[]){
+    int x[3] = {0},y[3] = {0};
+    int i = 0,j = 0;
+    x[1] = (pos1[2] - 1)/8;
+    y[1] = (pos1[2] - x[1]*8);
+    x[2] = (pos2[2] - 1)/8;
+    y[2] = (pos2[2] - x[2]*8);
+	if(((x[1]-x[2]) == (y[2]-y[1])) && (x[1]>x[2])){
+		for(i = x[1]-1,j = y[1]+1;i>x[2];--i,++j){
+			if(cell[(i*8)+j].name != NONE)
+				return -1;
+		}
+		return 0;
+	}
+	if(((x[1]-x[2]) == (y[2]-y[1])) && (x[1]<x[2])){
+		for(i = x[1]+1,j = y[1]-1;i<x[2];++i,--j){
+			if(cell[(i*8)+j].name != NONE)
+				return -1;
+		}
+		return 0;
+	}
+	if(((x[1]-x[2]) == (y[1]-y[2])) && (x[1]>x[2])){
+		for(i = x[1]-1,j = y[1]-1;i>x[2];--i,--j){
+			if(cell[(i*8)+j].name != NONE)
+				return -1;
+		}
+		return 0;
+	}
+	if(((x[1]-x[2]) == (y[1]-y[2])) && (x[1]<x[2])){
+		for(i = x[1]+1,j = y[1]+1;i<x[2];++i,++j){
+			if(cell[(i*8)+j].name != NONE)
+				return -1;
+		}
+		return 0;
+	}
+	return -1;
+}
+
+binar n_check(Cells* cell,char pos1[],char pos2[]){
+    int x[3] = {0},y[3] = {0};
+    int dx = 0,dy = 0;
+    x[1] = (pos1[2] - 1)/8;
+    y[1] = (pos1[2] - x[1]*8);
+    x[2] = (pos2[2] - 1)/8;
+    y[2] = (pos2[2] - x[2]*8);
+    dx = x[1] - x[2];
+    dy = y[1] - y[2];
+	if (dx == 2){
+		if ((dy == -1) || (dy == 1)){
+			return 0;
+		}
+	}
+	if (dx == 1){
+		if ((dy == -2) || (dy == 2)){
+			return 0;
+		}
+	}
+	if (dx == -2){
+		if ((dy == -1) || (dy == 1)){
+			return 0;
+		}
+	}
+	if (dx == -1){
+		if ((dy == -2) || (dy == 2)){
+			return 0;
+		}
+	}
+	return -1;
+}
+
+binar k_check(Cells* cell,char pos1[],char pos2[]){
+    int x[3] = {0},y[3] = {0};
+    int dx = 0,dy = 0;
+    x[1] = (pos1[2] - 1)/8;
+    y[1] = (pos1[2] - x[1]*8);
+    x[2] = (pos2[2] - 1)/8;
+    y[2] = (pos2[2] - x[2]*8);
+    dx = x[1] - x[2];
+    dy = y[1] - y[2];
+	if (dx == 1){
+		if ((dy == -1) || (dy == 0) || (dy == 1)){
+			return 0;
+		}
+	}
+	if (dx == 0){
+		if ((dy == -1) || (dy == 1)){
+			return 0;
+		}
+	}
+	if (dx == -1){
+		if ((dy == -1) || (dy == 0) || (dy == 1)){
+			return 0;
+		}
+	}
+	return -1;
+}
+// R,N,B,K,Q,P
+binar move_check(Cells* cell,char pos1[],char pos2[]){
+	char logic = 0;
+	switch (cell[(int)pos1[2]].name){
+	case R:
+		return (binar)(line_check(cell,pos1,pos2));
+	case N:
+		return (binar)(n_check(cell,pos1,pos2));
+	case B:
+		return (binar)(diag_check(cell,pos1,pos2));
+	case K:
+		return (binar)(k_check(cell,pos1,pos2));
+	case Q:
+		logic = line_check(cell,pos1,pos2) == 0 ||
+		diag_check(cell,pos1,pos2) == 0;
+		if(logic == 1){
+			return 0;
+		}
+		if(logic == 0){
+			return -1;
+		}
+		return -1;
+	case P:
+		return (binar)(p_check(cell,pos1,pos2));
+	default:
+		return -1;
+	}
+}

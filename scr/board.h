@@ -20,5 +20,10 @@ binar decode(char* buf,unsigned int move_num, char* pos1, char* pos2);
 binar move(Cells* cell,char* pos1, char* pos2);
 binar pos_check(Cells* cell, const char* pos1, const char* pos2);
 binar p_check(Cells* cell,char pos1[],char pos2[]);
+binar line_check(Cells* cell,char pos1[],char pos2[]);
+binar diag_check(Cells* cell,char pos1[],char pos2[]);
+binar n_check(Cells* cell,char pos1[],char pos2[]);
+binar k_check(Cells* cell,char pos1[],char pos2[]);
+binar move_check(Cells* cell,char pos1[],char pos2[]);
 
 #endif
