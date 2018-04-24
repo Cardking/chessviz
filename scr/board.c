@@ -152,6 +152,11 @@ binar decode(char* buf,unsigned int move_num, char* pos1, char* pos2){
     if (pos1[2] == pos2[2]){
         pos1[2] = 66;
     }
+    if (buf[5] == '#'){
+        pos2[3] = '#';
+    } else {
+        pos2[3] = ' ';
+    }
     return 0;
 }
 binar move(Cells* cell,char* pos1, char* pos2){
